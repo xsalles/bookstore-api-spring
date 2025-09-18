@@ -12,7 +12,8 @@ import org.hibernate.validator.constraints.ISBN;
 @Entity(name = "books")
 public class BookModel {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "books_seq", sequenceName = "books_seq",allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "books_seq")
 	private Integer id;
 
 	@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Author name contains invalid characters")

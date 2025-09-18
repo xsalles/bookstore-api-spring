@@ -108,4 +108,24 @@ public class BookService {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ApiResponseDto<String>("Book lent sucessfully.", HttpStatus.OK.value()));
 	}
+
+
+	public ResponseEntity<ApiResponseDto<String>> returnBook(Integer id) {
+		if (bookRepository.findById(id).isEmpty()) {
+			throw new BookNotFoundException("This book doesn't exists.");
+		}
+
+		BookModel existingBook = bookRepository.findById(id).get();
+
+		if (existingBook.getStatus().equals(Status.AVAILABLE)) {
+			throw new BookUnavailableException("This book isn't currently on loan.");
+		}
+
+		existingBook.setStatus(Status.AVAILABLE);
+
+		bookRepository.save(existingBook);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ApiResponseDto<String>("Book returned sucessfully.", HttpStatus.OK.value()));
+	}
 }

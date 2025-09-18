@@ -44,4 +44,9 @@ public class BookController {
 	public ResponseEntity<ApiResponseDto<String>> makeLoan(@PathVariable Integer id) {
 		return bookService.makeLoan(id);
 	}
+
+	@PatchMapping("/return-book/{id}")
+	public ResponseEntity<ApiResponseDto<String>> returnBook(@PathVariable Integer id) {
+		return bookService.returnBook(id);
+	}
 }
