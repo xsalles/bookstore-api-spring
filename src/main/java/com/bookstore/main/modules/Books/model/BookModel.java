@@ -1,31 +1,35 @@
 package com.bookstore.main.modules.Books.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.ISBN;
 
-import java.time.LocalDateTime;
-
 @Data
+@Entity(name = "books")
 public class BookModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
 	@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Author name contains invalid characters")
+	@NotBlank(message = "Author cannot be blank")
 	private String author;
 
+	@NotBlank(message = "Title cannot be blank")
 	private String title;
 
 	@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Genre contains invalid characters")
+	@NotBlank(message = "Genre cannot be blank")
 	private String genre;
 
 	@ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY, message = "Invalid ISBN format")
-	private String ISBN;
+	@NotBlank(message = "ISBN cannot be blank")
+	private String isbn;
 
-	@Pattern(regexp = "^\\d{4}$\n")
+	@NotNull(message = "Year published cannot be null")
+	@Column(name = "year_published")
 	private Integer yearPublished;
 }
