@@ -5,10 +5,7 @@ import com.bookstore.main.modules.Books.model.BookModel;
 import com.bookstore.main.modules.Books.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,8 +20,13 @@ public class BookController {
 		return bookService.createBook(bookModel);
 	}
 
-	@PostMapping("")
-	public ResponseEntity<ApiResponseDto<List<BookModel>>> createBook() {
+	@GetMapping("")
+	public ResponseEntity<ApiResponseDto<List<BookModel>>> getAllBooks() {
 		return bookService.getAllBooks();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponseDto<BookModel>> getBookById(@PathVariable Integer id) {
+		return bookService.getBookById(id);
 	}
 }

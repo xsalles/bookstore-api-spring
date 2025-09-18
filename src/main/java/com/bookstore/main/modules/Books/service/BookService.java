@@ -2,6 +2,7 @@ package com.bookstore.main.modules.Books.service;
 
 import com.bookstore.main.common.dto.ApiResponseDto;
 import com.bookstore.main.modules.Books.exceptions.BookAlreadyExistsException;
+import com.bookstore.main.modules.Books.exceptions.BookNotFoundException;
 import com.bookstore.main.modules.Books.model.BookModel;
 import com.bookstore.main.modules.Books.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,14 @@ public class BookService {
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ApiResponseDto<>("Books retrived sucessfully.", HttpStatus.OK.value(), bookRepository.findAll()));
+	}
+
+	public ResponseEntity<ApiResponseDto<BookModel>> getBookById(Integer id) {
+		if (bookRepository.findById(id).isEmpty()) {
+			throw new BookNotFoundException("Book not found.");
+		}
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ApiResponseDto<BookModel>("Book retrived sucessfully.", HttpStatus.OK.value(), bookRepository.findById(id).get()));
 	}
 }
