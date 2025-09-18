@@ -45,4 +45,30 @@ public class BookService {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ApiResponseDto<BookModel>("Book retrived sucessfully.", HttpStatus.OK.value(), bookRepository.findById(id).get()));
 	}
+
+	public ResponseEntity<ApiResponseDto<BookModel>> updateBook(Integer id, BookModel bookModel) {
+		if (bookRepository.findById(id).isEmpty()) {
+			throw new BookNotFoundException("This book doesn't exists.");
+		}
+
+		BookModel existingBook = bookRepository.findById(id).get();
+
+		boolean alreadyExists = bookRepository.existsByIsbn(bookModel.getIsbn())
+				&& !existingBook.getIsbn().equals(bookModel.getIsbn());
+
+		if (alreadyExists) {
+			throw new BookAlreadyExistsException("Book with this informations already exists.");
+		}
+
+		existingBook.setAuthor(bookModel.getAuthor());
+		existingBook.setTitle(bookModel.getTitle());
+		existingBook.setIsbn(bookModel.getIsbn());
+		existingBook.setGenre(bookModel.getGenre());
+		existingBook.setYearPublished(bookModel.getYearPublished());
+
+		bookRepository.save(existingBook);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ApiResponseDto<BookModel>("Book updated sucessfully.", HttpStatus.OK.value(), bookRepository.findById(id).get()));
+	}
 }

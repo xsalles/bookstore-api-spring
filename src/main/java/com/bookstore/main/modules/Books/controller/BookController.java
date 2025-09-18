@@ -29,4 +29,11 @@ public class BookController {
 	public ResponseEntity<ApiResponseDto<BookModel>> getBookById(@PathVariable Integer id) {
 		return bookService.getBookById(id);
 	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ApiResponseDto<BookModel>> updateBook(@PathVariable Integer id, @RequestBody BookModel bookModel) {
+		return bookService.updateBook(id, bookModel);
+	}
+
+
 }
