@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/books")
 public class BookController {
@@ -19,5 +21,10 @@ public class BookController {
 	@PostMapping("/create")
 	public ResponseEntity<ApiResponseDto<BookModel>> createBook(@RequestBody BookModel bookModel) {
 		return bookService.createBook(bookModel);
+	}
+
+	@PostMapping("")
+	public ResponseEntity<ApiResponseDto<List<BookModel>>> createBook() {
+		return bookService.getAllBooks();
 	}
 }
