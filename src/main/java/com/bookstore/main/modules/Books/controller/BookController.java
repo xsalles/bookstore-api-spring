@@ -35,5 +35,13 @@ public class BookController {
 		return bookService.updateBook(id, bookModel);
 	}
 
+	@DeleteMapping("/{id}")
+	public ResponseEntity<ApiResponseDto<String>> deleteBook(@PathVariable Integer id) {
+		return bookService.deleteBook(id);
+	}
 
+	@PatchMapping("/make-loan/{id}")
+	public ResponseEntity<ApiResponseDto<String>> makeLoan(@PathVariable Integer id) {
+		return bookService.makeLoan(id);
+	}
 }

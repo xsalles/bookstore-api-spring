@@ -1,8 +1,10 @@
 package com.bookstore.main.modules.Books.service;
 
 import com.bookstore.main.common.dto.ApiResponseDto;
+import com.bookstore.main.common.enums.Status;
 import com.bookstore.main.modules.Books.exceptions.BookAlreadyExistsException;
 import com.bookstore.main.modules.Books.exceptions.BookNotFoundException;
+import com.bookstore.main.modules.Books.exceptions.BookUnavailableException;
 import com.bookstore.main.modules.Books.model.BookModel;
 import com.bookstore.main.modules.Books.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ public class BookService {
 				.body(new ApiResponseDto<BookModel>("Book created successfully.", HttpStatus.CREATED.value(), bookModel));
 	}
 
+
 	public ResponseEntity<ApiResponseDto<List<BookModel>>> getAllBooks() {
 		if (bookRepository.findAll().isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -37,6 +40,7 @@ public class BookService {
 				.body(new ApiResponseDto<>("Books retrived sucessfully.", HttpStatus.OK.value(), bookRepository.findAll()));
 	}
 
+
 	public ResponseEntity<ApiResponseDto<BookModel>> getBookById(Integer id) {
 		if (bookRepository.findById(id).isEmpty()) {
 			throw new BookNotFoundException("Book not found.");
@@ -45,6 +49,7 @@ public class BookService {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ApiResponseDto<BookModel>("Book retrived sucessfully.", HttpStatus.OK.value(), bookRepository.findById(id).get()));
 	}
+
 
 	public ResponseEntity<ApiResponseDto<BookModel>> updateBook(Integer id, BookModel bookModel) {
 		if (bookRepository.findById(id).isEmpty()) {
@@ -70,5 +75,37 @@ public class BookService {
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ApiResponseDto<BookModel>("Book updated sucessfully.", HttpStatus.OK.value(), bookRepository.findById(id).get()));
+	}
+
+
+	public ResponseEntity<ApiResponseDto<String>> deleteBook(Integer id) {
+		if (bookRepository.findById(id).isEmpty()) {
+			throw new BookNotFoundException("This book doesn't exists.");
+		}
+
+		bookRepository.deleteById(id);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ApiResponseDto<String>("Book deleted sucessfully.", HttpStatus.OK.value()));
+	}
+
+
+	public ResponseEntity<ApiResponseDto<String>> makeLoan(Integer id) {
+		if (bookRepository.findById(id).isEmpty()) {
+			throw new BookNotFoundException("This book doesn't exists.");
+		}
+
+		BookModel existingBook = bookRepository.findById(id).get();
+
+		if (existingBook.getStatus().equals(Status.UNAVAILABLE)) {
+			throw new BookUnavailableException("This book is currently unavailable.");
+		}
+
+		existingBook.setStatus(Status.UNAVAILABLE);
+
+		bookRepository.save(existingBook);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ApiResponseDto<String>("Book lent sucessfully.", HttpStatus.OK.value()));
 	}
 }

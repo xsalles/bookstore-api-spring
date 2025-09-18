@@ -1,5 +1,6 @@
 package com.bookstore.main.modules.Books.model;
 
+import com.bookstore.main.common.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,4 +33,6 @@ public class BookModel {
 	@NotNull(message = "Year published cannot be null")
 	@Column(name = "year_published")
 	private Integer yearPublished;
+
+	private Status status = Status.AVAILABLE;
 }
