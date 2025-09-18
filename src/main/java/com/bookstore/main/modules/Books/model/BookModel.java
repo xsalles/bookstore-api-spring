@@ -5,6 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.hibernate.validator.constraints.ISBN;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +23,9 @@ public class BookModel {
 	@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Genre contains invalid characters")
 	private String genre;
 
-	@Pattern(regexp = "^(97(8|9))?\\d{9}(\\d|X)$", message = "Invalid ISBN format")
+	@ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY, message = "Invalid ISBN format")
 	private String ISBN;
 
-	private Integer year;
+	@Pattern(regexp = "^\\d{4}$\n")
+	private Integer yearPublished;
 }

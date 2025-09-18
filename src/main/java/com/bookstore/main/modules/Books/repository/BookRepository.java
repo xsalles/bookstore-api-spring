@@ -1,4 +1,8 @@
 package com.bookstore.main.modules.Books.repository;
 
-public class BookRepository {
+import com.bookstore.main.modules.Books.model.BookModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<BookModel, Integer> {
+	boolean existsByISBN(String isbn);
 }
